@@ -7,16 +7,21 @@ contract SpectToken{
     error notEnoughAllowance(uint256 allowanceBalance);
 
     event Transfer(
-        address from,
-        address to,
-        uint256 value
+        address indexed from,
+        address indexed to,
+        uint256 indexed value
+    );
+    event Approval(
+        address indexed owner,
+        address indexed hasAllowance,
+        uint256 indexed allowance
     );
 
     uint256 private s_totalTokens;
     uint8 private s_decimals;
 
     mapping(address => uint256) private s_balance;
-    mapping(address => mapping(address => uint256)) private s_allowances;
+    mapping(address => mapping(address => uint256)) private s_allowances; // address(tokens owner) => address(jiske pass un tokens ka access hai as allowance)
 
     constructor(uint256 totalTokens, uint8 totalDecimals){
         s_totalTokens=totalTokens;
@@ -39,55 +44,59 @@ contract SpectToken{
         return s_totalTokens;
     }
 
-    function balanceOf(address _owner) public view returns (uint256 balance){
-        return s_balance[_owner];
+    function balanceOf(address owner) public view returns (uint256 balance){
+        return s_balance[owner];
     }
 
-    function transfer(address _to, uint256 _value) public returns (bool success){
+    function transfer(address to, uint256 value) public returns (bool success){
 
-        if(balanceOf(msg.sender) < _value){
+        if(balanceOf(msg.sender) < value){
             revert notEnoughBalance(
                 balanceOf(msg.sender)
             );
         }
         
         uint256 senderBalance = balanceOf(msg.sender);
-        uint256 recieverBalance = balanceOf(_to);
+        uint256 recieverBalance = balanceOf(to);
         
-        s_balance[msg.sender] -= _value;
-        s_balance[_to] += _value;
+        s_balance[msg.sender] -= value;
+        s_balance[to] += value;
 
-        if(senderBalance == (balanceOf(msg.sender) - _value) && recieverBalance == (balanceOf(_to) + _value)){
+        if(senderBalance == (balanceOf(msg.sender) - value) && recieverBalance == (balanceOf(to) + value)){
             return true;
         }
     }
 
-    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success){
-        if(s_allowances[msg.sender][_from] < _value){
-            revert notEnoughAllowance(s_allowances[msg.sender][_from]);
+    function transferFrom(address from, address to, uint256 value) public returns (bool success){
+        if(s_allowances[from][msg.sender] < value){
+            revert notEnoughAllowance(s_allowances[from][msg.sender]);
         }
 
-        if(balanceOf(_from) < _value){
+        if(balanceOf(from) < value){
             revert notEnoughBalance(
-                balanceOf(_from)
+                balanceOf(from)
             );
         }
 
-        s_allowances[msg.sender][_from] -= _value;
-        s_balance[_from] -= _value;
-        s_balance[_to] += _value;
+        s_allowances[from][msg.sender] -= value;
+        s_balance[from] -= value;
+        s_balance[to] += value;
 
-        emit Transfer(_from, _to, _value);
+        emit Transfer(from, to, value);
         return true;
 
     }
 
-    function approve(address _spender, uint256 _value) public returns (bool success){
+    function approve(address spender, uint256 value) public returns (bool success){
+        s_allowances[msg.sender][spender] = 0;
+        s_allowances[msg.sender][spender] = value;
 
+        emit Approval(msg.sender, spender, value);
+        return true;
     }
 
-    function allowance(address _owner, address _spender) public view returns (uint256){
-        return s_allowances[_spender][_owner];
+    function allowance(address owner, address spender) public view returns (uint256){
+        return s_allowances[spender][owner];
     }
 
 }
