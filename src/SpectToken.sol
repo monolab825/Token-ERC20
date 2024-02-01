@@ -3,20 +3,28 @@ pragma solidity ^0.8.18;
 
 contract SpectToken{
 
-    function name() public view returns (string memory){
+    uint256 private s_totalTokens;
+    uint8 private s_decimals;
 
+    constructor(uint256 totalTokens, uint8 totalDecimals){
+        s_totalTokens=totalTokens;
+        s_decimals = totalDecimals;
     }
 
-    function symbol() public view returns (string memory){
+    function name() public pure returns (string memory){
+        return "SpectToken";
+    }
 
+    function symbol() public pure returns (string memory){
+        return "SPT";
     }
 
     function decimals() public view returns (uint8){
-
+        return s_decimals;
     }
     
     function totalSupply() public view returns (uint256){
-
+        return s_totalTokens;
     }
 
     function balanceOf(address _owner) public view returns (uint256 balance){
@@ -28,7 +36,6 @@ contract SpectToken{
     }
 
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success){
-
 
     }
 
