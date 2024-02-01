@@ -3,9 +3,11 @@ pragma solidity ^0.8.18;
 
 contract SpectToken{
 
+    // ERRORS
     error notEnoughBalance(uint256 senderBalance);
     error notEnoughAllowance(uint256 allowanceBalance);
 
+    // EVENTS
     event Transfer(
         address indexed from,
         address indexed to,
@@ -17,12 +19,15 @@ contract SpectToken{
         uint256 indexed allowance
     );
 
+    // STATE VARIABLES
     uint256 private s_totalTokens;
     uint8 private s_decimals;
 
+    // MAPPINGS
     mapping(address => uint256) private s_balance;
     mapping(address => mapping(address => uint256)) private s_allowances; // address(tokens owner) => address(jiske pass un tokens ka access hai as allowance)
 
+    // CONSTRUCTOR
     constructor(uint256 totalTokens, uint8 totalDecimals){
         s_totalTokens=totalTokens;
         s_decimals = totalDecimals;
