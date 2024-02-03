@@ -6,14 +6,33 @@ import {DeploySpectToken} from "../script/DeploySpectToken.s.sol";
 import {SpectToken} from "../src/SpectToken.sol";
 
 contract SpectTokenTest is Test{
-    SpectToken spectToken;
+    SpectToken public spectToken;
+    DeploySpectToken public deploy;
 
     function setUp() external{
         
-        vm.startBroadcast();
-        DeploySpectToken deploy = new DeploySpectToken();
+        deploy = new DeploySpectToken();
         spectToken = deploy.run();
-        vm.stopBroadcast();
-
+        
     }
+
+    function testNameOfToken() public{
+
+        assertEq(spectToken.name(), "SpectToken");
+    }
+
+    function testSymbolOfToken() public{
+
+        assertEq(spectToken.symbol(), "SPT");
+    }
+
+    function testDecimalsOfToken() public{
+
+        assertEq(spectToken.decimals(), 18);
+    }
+
+    function testTotalSupplyOfToken() public{
+        assertEq(spectToken.totalSupply(), 1000 ether);
+    }
+
 }
