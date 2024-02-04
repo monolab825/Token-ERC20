@@ -67,4 +67,18 @@ contract SpectTokenTest is Test{
         ));
         spectToken.transfer(Soph, 100 ether);
     }
+
+
+    function testTransferOfToken() public{
+
+        vm.prank(msg.sender);
+        spectToken.transfer(Eph, 100 ether);
+        vm.prank(Eph);
+        spectToken.transfer(Soph, 50 ether);
+
+        assertEq(spectToken.balanceOf(msg.sender), spectToken.getTotalTokenSupply() - 100 ether);
+        assertEq(spectToken.balanceOf(Eph), 50 ether);
+        assertEq(spectToken.balanceOf(Soph), 50 ether);
+
+    }
 }

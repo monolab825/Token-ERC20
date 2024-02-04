@@ -114,4 +114,10 @@ contract SpectToken{
         return s_allowances[spender][owner];
     }
 
+    // Getter functions
+
+    function getTotalTokenSupply() view external returns(uint256){
+        return s_totalTokens;
+    }
+
 }
