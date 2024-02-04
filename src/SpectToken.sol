@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity ^0.8.18;
 
+import {console} from "forge-std/console.sol";
+
 contract SpectToken{
 
     // ERRORS
@@ -31,6 +33,14 @@ contract SpectToken{
     constructor(uint256 totalTokens, uint8 totalDecimals){
         s_totalTokens=totalTokens;
         s_decimals = totalDecimals;
+        s_balance[msg.sender] = s_totalTokens;
+
+        // for debugging purpose -
+        // console.log("token");
+        // console.log(msg.sender);
+        // console.log(address(this));
+        // console.log(balanceOf(msg.sender));
+        // console.log("token");
     }
 
     function name() public pure returns (string memory){
