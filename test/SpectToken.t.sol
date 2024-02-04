@@ -81,4 +81,17 @@ contract SpectTokenTest is Test{
         assertEq(spectToken.balanceOf(Soph), 50 ether);
 
     }
+
+    function testRevertWhenNotEnoughAllowance() public{
+
+        uint256 allowanceOnSoph = 0;
+        vm.prank(Soph);
+        vm.expectRevert(
+            abi.encodeWithSelector(
+                SpectToken.notEnoughAllowance.selector,
+                allowanceOnSoph
+            )
+        );
+        spectToken.transferFrom(Eph, Soph, 25 ether);
+    }
 }
