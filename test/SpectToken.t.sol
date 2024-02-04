@@ -9,6 +9,9 @@ contract SpectTokenTest is Test{
     SpectToken public spectToken;
     DeploySpectToken public deploy;
 
+    address public Eph = makeAddr("eph");
+    address public Soph = makeAddr("soph");
+
     function setUp() external{
         
         deploy = new DeploySpectToken();
@@ -52,5 +55,16 @@ contract SpectTokenTest is Test{
         uint256 balance = spectToken.balanceOf(msg.sender);
         assertEq(balance, 1000 ether);
 
+    }
+
+    function testRevertWhenBalanceIsLessThanTransferAmount() public{
+
+        uint256 balanceOfEph = 0;
+        vm.prank(Eph);
+        vm.expectRevert(abi.encodeWithSelector(
+            SpectToken.notEnoughBalance.selector,
+            balanceOfEph
+        ));
+        spectToken.transfer(Soph, 100 ether);
     }
 }
